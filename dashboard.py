@@ -38,3 +38,35 @@ if df_smhi is not None:
     st.dataframe(df_smhi, width="stretch")
 else:
     st.error(msg)
+
+
+
+
+st.subheader("☁️ Daily Precipitation (48h Forecast)")
+
+chart_df = df_smhi.copy()
+chart_df["Datetime"] = pd.to_datetime(chart_df["Date"] + " " + chart_df["Hour"])
+chart_df["Weekday"] = chart_df["Datetime"].dt.strftime("%A")
+
+# Classify rain vs snow based on temperature
+def classify_precip(row):
+    if row["Rain or Snow"]:
+        return "Snow" if row["Temperature (°C)"] <= 0 else "Rain"
+    return None
+
+chart_df["WeatherType"] = chart_df.apply(classify_precip, axis=1)
+
+# Summarize per day
+daily_summary = chart_df.groupby("Date")["WeatherType"].apply(lambda x: set(filter(None, x))).reset_index()
+daily_summary["Weekday"] = pd.to_datetime(daily_summary["Date"]).dt.strftime("%A")
+
+
+daily_summary["Rain"] = daily_summary["WeatherType"].apply(lambda x: "🌧️" if "Rain" in x else "❌")
+daily_summary["Snow"] = daily_summary["WeatherType"].apply(lambda x: "❄️" if "Snow" in x else "❌")
+daily_summary_display = daily_summary[["Weekday", "Date", "Rain", "Snow"]]
+
+# Display without index
+st.dataframe(daily_summary_display, use_container_width=True, hide_index=True)
+
+
+
