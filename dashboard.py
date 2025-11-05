@@ -81,7 +81,7 @@ if city_df is not None:
     city_df = city_df.sort_values("Datetime").head(12)  
 
     fig, ax = plt.subplots(figsize=(8, 3), facecolor="#f0f0f0")  # light grey background
-    ax.plot(city_df["Datetime"], city_df["Temperature (°C)"], color='orange', linewidth=2)
+    ax.plot(city_df["Datetime"], city_df["Temperature (°C)"], linewidth=2)
 
     # Axis labels
     ax.set_ylabel("Temperature (°C)", fontsize=10)
