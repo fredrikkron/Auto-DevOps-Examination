@@ -8,7 +8,7 @@ def test_collect_smhi_data_success(mock_get):
     mock_smhi_json = {
         "timeSeries": [
             {
-                "validTime": "2025-11-08T12:00:00Z",
+                "validTime": "2026-11-08T12:00:00Z",
                 "parameters": [
                     {"name": "t", "values": [4.9]}, # tests to be rounded since app.py does that
                     {"name": "pcat", "values": [1]}
