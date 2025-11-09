@@ -10,7 +10,7 @@ on:
 env:
   IMAGE_NAME: fkron95/streamlit-smhi-weather-app
   APP_NAME: SMHI-Web-App
-  PYTHON_VERSION: '3.11'
+  PYTHON_VERSION: 3.11
 
 
 jobs:
