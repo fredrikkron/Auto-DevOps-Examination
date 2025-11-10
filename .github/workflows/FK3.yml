@@ -71,6 +71,12 @@ jobs:
         with:
           name: pytest-test-results
           path: junit/test-results-${{ env.PYTHON_VERSION }}.xml
+      
+      - name: Failure of job if tests failed
+        if: ${{ env.TESTS_FAILED == 'true' }}
+        run: |
+          echo "One or more tests have failed."
+          exit 1
           
   deployment:
     name: Build and Push Docker Image to Docker Hub and Deploy to Azure Web App
