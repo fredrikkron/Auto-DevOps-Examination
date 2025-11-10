@@ -20,7 +20,6 @@ env:
   IMAGE_NAME: fkron95/streamlit-smhi-weather-app
   APP_NAME: SMHI-Web-App
   PYTHON_VERSION: 3.11
-  LOGGING_ERRORS: ${{ inputs.logging_errors }}
 
 
 jobs:
@@ -64,10 +63,10 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest test_api.py test_process_smhi_data.py --doctest-modules --junitxml=junit/test-results-${{ env.PYTHON_VERSION }}.xml
+          pytest test_api.py test_process_smhi_data.py --doctest-modules --junitxml=junit/test-results-${{ env.PYTHON_VERSION }}.xml || echo "TESTS_FAILED=true" >> $GITHUB_ENV
 
       - name: Upload pytest test results
-        if: ${{ always() && env.LOGGING_ERRORS == 'true' }}
+        if: ${{ env.TESTS_FAILED == 'true' && github.event.inputs.logging_errors == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: pytest-test-results
@@ -77,8 +76,8 @@ jobs:
     name: Build and Push Docker Image to Docker Hub and Deploy to Azure Web App
     runs-on: ubuntu-latest
     needs: tests
-
     if: needs.tests.result == 'success'
+
     steps:
       - name : Checkout repository
         uses: actions/checkout@v4
