@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       logging_errors:
-        description: Log error handling based on test result
+        description: Create artifact log if a test fails
         required: true
-        default: false
+        default: true
         type: choice
         options:
           - true
@@ -46,8 +46,6 @@ jobs:
     name: Run a pytest on API retrieval and data processing
     runs-on: ubuntu-latest
     needs: environment_check
-    outputs:
-      result: ${{ steps.result.outputs.result }}
 
     steps:
       - name: Checkout repository
@@ -65,23 +63,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest test_api.py test_process_smhi_data.py > error-output.log 2>&1 || echo "TEST_FAILED=true" >> $GITHUB_ENV
-
-      - name: Result output
-        id: result
-        run: |
-          if [ "${TEST_FAILED}" = "true" ]; then
-            echo "result=failure" >> $GITHUB_OUTPUT
-          else
-            echo "result=success" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Upload error logs on failure  
-        if: ${{ github.event.inputs.logging_errors == 'true' && steps.result.outputs.result == 'failure' }}
-        uses: actions/checkout@v4
-        with:
-          name: error-log-${{ github.run_id }}
-          path: error-output.log
+          pytest test_api.py test_process_smhi_data.py
 
 
   deployment:
@@ -89,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
 
-    if: needs.tests.outputs.result == 'success'
+    if: needs.tests.result == 'success'
     steps:
       - name : Checkout repository
         uses: actions/checkout@v4
