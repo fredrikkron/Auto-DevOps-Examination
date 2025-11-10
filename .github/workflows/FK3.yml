@@ -63,14 +63,14 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest test_api.py test_process_smhi_data.py --doctest-modules --junitxml=junit/test-results-${{ env.python-version }}.xml
+          pytest test_api.py test_process_smhi_data.py --doctest-modules --junitxml=junit/test-results-${{ env.PYTHON_VERSION }}.xml
         
       - name: Upload pytest test results 
         if: ${{ always() && inputs.logging_errors == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: pytest-test-results
-          path: junit/test-results-${{ env.python-version }}.xml
+          path: junit/test-results-${{ env.PYTHON_VERSION }}.xml
           
   deployment:
     name: Build and Push Docker Image to Docker Hub and Deploy to Azure Web App
