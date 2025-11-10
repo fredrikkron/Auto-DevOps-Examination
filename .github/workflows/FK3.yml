@@ -71,11 +71,7 @@ jobs:
         with:
           name: pytest-test-results
           path: junit/test-results-${{ env.python-version }}.xml
-
-        if: ${{ always() }}
           
-
-
   deployment:
     name: Build and Push Docker Image to Docker Hub and Deploy to Azure Web App
     runs-on: ubuntu-latest
