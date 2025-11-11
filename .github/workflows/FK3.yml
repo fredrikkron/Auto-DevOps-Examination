@@ -63,7 +63,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest test_api.py test_process_smhi_data.py --doctest-modules --junitxml=junit/test-results-${{ env.PYTHON_VERSION }}.xml || echo "TESTS_FAILED=true" >> $GITHUB_ENV
+          pytest test_api.py test_process_smhi_data.py test_if_failure.py --doctest-modules --junitxml=junit/test-results-${{ env.PYTHON_VERSION }}.xml || echo "TESTS_FAILED=true" >> $GITHUB_ENV
 
       - name: Upload pytest test results
         if: ${{ env.TESTS_FAILED == 'true' && github.event.inputs.logging_errors == 'true' }}
